@@ -16,13 +16,7 @@ window.onload = function() {
     layout: "StandaloneLayout",
 
     onComplete: () => {
-      // Nascondi tutti i tag "admin"
-      const unwantedTags = ["Multisistema"]; // puoi aggiungere altri tag qui
-
-      unwantedTags.forEach(tag => {
-        const tagElements = document.querySelectorAll(`.opblock-tag-section[data-tag='${tag}']`);
-        tagElements.forEach(el => el.style.display = 'none');
-      });
+	console.log("swagger ui completed");
     },
     //requestInterceptor: (req) => {
     //    if (req.url.includes('/path_that_requires_session_cookie')) {
@@ -32,6 +26,8 @@ window.onload = function() {
     //},
 
     //filter: true,
+
+    validatorUrl: null,
 
     docExpansion: "none", // Riduce al minimo le operazioni di default
     //defaultModelsExpandDepth: -1 // Nasconde i modelli nella UI
