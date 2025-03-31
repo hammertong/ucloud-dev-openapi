@@ -29,11 +29,10 @@ foreach ($apiSpec['paths'] as $path => $methods) {
     }
 }
 
-// Filtra gli schemas in base ai tag consentiti
 $filteredSchemas = [];
 if (isset($apiSpec['components']['schemas'])) {
     foreach ($apiSpec['components']['schemas'] as $schemaName => $schemaDetails) {
-        if ( array_key_exists ("x-tags", $allowedTags)  
+        if ( array_key_exists ("x-tags", $schemaDetails)  
             && (!isset($schemaDetails['x-tags']) || empty(array_intersect($schemaDetails['x-tags'], $allowedTags))) ) {
             continue;
         }
@@ -41,9 +40,25 @@ if (isset($apiSpec['components']['schemas'])) {
     }
 }
 
+$filteredTags = [];
+if (isset($apiSpec['tags'])){
+    foreach ($apiSpec['tags'] as $tag) {
+	$name = $tag["name"];
+    	if (! in_array($name,  $allowedTags)) continue;
+        array_push($filteredTags, $tag);        
+    }
+}
+
+$apiSpec["tags"] = $filteredTags;
+
+//error_log(json_encode($allowedTags)); 
+//error_log(json_encode($apiSpec["tags"])); 
+
+
 // Ricostruisce lo schema OpenAPI filtrato
 $filteredApiSpec = $apiSpec;
 $filteredApiSpec['paths'] = $filteredPaths;
+$filteredApiSpec['components']['schemas'] = $filteredSchemas;
 $filteredApiSpec['info']['version'] = WEBAPI_VERSION;
 
 header('Content-Type: application/json');
